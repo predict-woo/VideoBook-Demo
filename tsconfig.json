@@ -2,12 +2,14 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    ".react-router/types/**/*",
-    "app/remotion/constants.mjs",
-    "deploy.mjs"
+    "app/remotion/constants.mjs"
   ],
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2022"
+    ],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
@@ -22,12 +24,17 @@
     "baseUrl": ".",
     "allowImportingTsExtensions": true,
     "paths": {
-      "~/*": ["./app/*"]
+      "~/*": [
+        "./app/*"
+      ]
     },
     "noEmit": true,
-    "types": ["@react-router/node", "vite/client"],
-    "rootDirs": [".", "./.react-router/types"],
+    "types": [
+      "vite/client"
+    ],
     "module": "ESNext"
   },
-  "exclude": ["remotion.config.ts"]
+  "exclude": [
+    "remotion.config.ts"
+  ]
 }

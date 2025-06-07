@@ -5,17 +5,17 @@ import {
   COMPOSITION_FPS,
   COMPOSITION_HEIGHT,
   COMPOSITION_WIDTH,
-} from "./remotion/constants.mjs";
+} from "../app/remotion/constants.mjs";
 import "./app.css";
 import { z } from "zod";
-import { Main } from "./remotion/components/Main";
+import { Main } from "../app/remotion/components/Main";
 import { RenderControls } from "./components/RenderControls";
 import { Spacing } from "./components/Spacing";
 import { Tips } from "./components/Tips";
-import { CompositionProps } from "./remotion/schemata";
+import { CompositionProps } from "../app/remotion/schemata";
 
-export default function Index() {
-  const [text, setText] = useState("React Router + Remotion");
+export function Home() {
+  const [text, setText] = useState("Remotion Player");
 
   const inputProps: z.infer<typeof CompositionProps> = useMemo(() => {
     return {
@@ -57,4 +57,4 @@ export default function Index() {
       </div>
     </div>
   );
-}
+} 
