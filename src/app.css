@@ -22,7 +22,7 @@ body,
 }
 
 :root {
-  --background: #fff;
+  --background: #000;
   --foreground: #000;
   --unfocused-border-color: #eaeaea;
   --focused-border-color: #666;
