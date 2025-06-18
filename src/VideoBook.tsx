@@ -67,7 +67,7 @@ export function VideoBook() {
         ref={playerRef}
         component={Template}
         inputProps={{
-          videoUrl: "/test-video/demo.mp4",
+          videoUrl: "/test-video/demo-compressed.mp4",
           srtUrl: "/test-video/demo-rev.srt",
           illustrationSrtUrl: "/test-video/demo-illustration.srt",
         }}
