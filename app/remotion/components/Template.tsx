@@ -189,6 +189,53 @@ export const Template: React.FC<TemplateSchema> = ({
       .reduce((a, b) => a + b, 0);
   }, [currentSrtIndex, targetScrollYs, srtEntries, fps, frame]);
 
+  const animVideo = useMemo(() => {
+    // The base scale is 1
+    let scale = 1;
+
+    // We add animations for each illustration
+    for (const entry of illustrationEntries) {
+      const { start, end } = entry;
+      const startFrame = start * fps;
+      const endFrame = end * fps;
+
+      // Animation to shrink the video
+      const shrink = interpolate(
+        spring({
+          frame: frame - startFrame,
+          fps,
+          config: {
+            damping: 200,
+            stiffness: 50,
+            mass: 1,
+          },
+        }),
+        [0, 1],
+        [0, -1], // Goes from 1 to 0.2
+        { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+      );
+
+      // Animation to grow the video back
+      const grow = interpolate(
+        spring({
+          frame: frame - endFrame,
+          fps,
+          config: {
+            damping: 100,
+            stiffness: 100,
+            mass: 1,
+          },
+        }),
+        [0, 1],
+        [0, 1], // Goes from 0.2 to 1
+        { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+      );
+      scale += shrink + grow;
+    }
+
+    return scale;
+  }, [illustrationEntries, fps, frame]);
+
   const videoSize = height * 0.4;
 
   return (
@@ -207,13 +254,17 @@ export const Template: React.FC<TemplateSchema> = ({
               position: "relative",
               width: videoSize,
               height: videoSize,
+              // Only apply a gradient mask to the bottom edge (e.g., bottom 20%)
+              maskImage:
+                "linear-gradient(to bottom, black 80%, transparent 100%)",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, black 80%, transparent 100%)",
             }}
           >
             {currentIllustration && (
               <AbsoluteFill
                 className="rounded-[10px] overflow-hidden shadow-2xl"
                 style={{
-                  // transform: `scale(${animatedIllustrationScale})`,
                   transformOrigin: "top right",
                 }}
               >
@@ -224,22 +275,22 @@ export const Template: React.FC<TemplateSchema> = ({
               </AbsoluteFill>
             )}
             <AbsoluteFill
-              style={
-                {
-                  // transform: `scale(${videoScale}) translateX(${videoTranslateX}px) translateY(${videoTranslateY}px)`,
-                }
-              }
+              className="overflow-hidden shadow-2xl bg-gray-500"
+              style={{
+                transform: `scale(${animVideo * 0.7 + 0.3}) translate( ${
+                  (1 - animVideo) * 10
+                }%, ${(1 - animVideo) * 10}%)`,
+                transformOrigin: "top left",
+                boxShadow: `0 0 ${(1 - animVideo) * 100}px 0 rgba(0, 0, 0, 1)`,
+                borderRadius: `${(1 - animVideo) * 30 + 10}px`,
+              }}
             >
               <Video
                 src={staticFile(videoUrl)}
-                className="rounded-[10px] overflow-hidden shadow-2xl object-cover"
+                className="object-cover"
                 style={{
                   width: "100%",
                   height: "100%",
-                  maskImage:
-                    "linear-gradient(to bottom, black 85%, transparent 100%)",
-                  WebkitMaskImage:
-                    "linear-gradient(to bottom, black 85%, transparent 100%)",
                 }}
               />
             </AbsoluteFill>

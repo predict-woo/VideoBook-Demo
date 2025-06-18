@@ -6,10 +6,6 @@ illustrations/1.png
 00:00:24,080 --> 00:00:29,420
 illustrations/2.png
 
-3
-00:00:29,420 --> 00:00:35,280
-illustrations/3.png
-
 4
 00:00:35,280 --> 00:00:39,800
 illustrations/4.png
