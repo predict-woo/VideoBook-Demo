@@ -1,5 +1,7 @@
-import { createRoot } from 'react-dom/client';
-import { Home } from './Home';
+import { createRoot } from "react-dom/client";
+import { Home } from "./Home";
+import { VideoBook } from "./VideoBook";
+// import { HomeBundled } from './HomeBundled';
 
-const root = createRoot(document.getElementById('root')!);
-root.render(<Home />); 
+const root = createRoot(document.getElementById("root")!);
+root.render(<VideoBook />);
