@@ -1,129 +1,84 @@
-# Remotion + React Router 7 Starter Kit
+# Video Book Player
 
-<p align="center">
-  <a href="https://github.com/remotion-dev/logo">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-dark.gif">
-      <img alt="Animated Remotion Logo" src="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-light.gif">
-    </picture>
-  </a>
-</p>
+[![Netlify Status](https://api.netlify.com/api/v1/badges/bd3dc4e0-f38e-4edb-9ef6-c6f4aed8a8f3/deploy-status)](https://app.netlify.com/projects/readx-video-book/deploys)
 
-This is a [React Router 7 starter kit](https://reactrouter.com/home) with [Remotion](https://remotion.dev), [`@remotion/player`](https://remotion.dev/player) and [`@remotion/lambda`](https://remotion.dev/lambda) built in.  
-It lets you render a video from a React Router app with AWS Lambda.
+This project is a web-based video player that creates a "video book" experience using [Remotion](https://remotion.dev). It combines a primary video with synchronized, animated subtitles and illustrative overlays that appear at designated times.
 
-## Getting started
+## Features
 
-Install dependencies using
+- **Dynamic Video Composition**: The video is a Remotion composition, allowing for programmatic animations and overlays.
+- **Scrolling Subtitles**: Subtitles are displayed in a scrolling view that automatically keeps the current line centered and highlighted.
+- **Illustrative Overlays**: Illustrations (images) can be scheduled to appear over the main video, which animates to a smaller size to accommodate them.
+- **Responsive Layout**: The player and UI adapt to different screen sizes.
+- **Playback Controls**: The user can control the playback speed of the video.
+- **Data-Driven Content**: Video, subtitles, and illustrations are loaded from external SRT and video files, defined by a Zod schema.
 
-<!-- create-video will replace this with the package manager specific command -->
+## Getting Started
 
-```
-npm install
-```
+### Prerequisites
 
-## Run the React Router app
+- [Node.js](https://nodejs.org/) (v20 or later)
+- [pnpm](https://pnpm.io/)
 
-Run the example app using:
+### Installation
 
-```
-npm run dev
-```
+1.  Clone the repository:
+    ```bash
+    git clone <repository-url>
+    ```
+2.  Navigate to the project directory:
+    ```bash
+    cd <project-directory>
+    ```
+3.  Install the dependencies:
+    ```bash
+    pnpm install
+    ```
 
-## Edit the video
+### Running the Application
 
-Start the Remotion Preview (the editor interface) using:
+-   **Development Server**: To run the web application locally, use the following command. This will start a Vite development server.
+    ```bash
+    pnpm dev
+    ```
+-   **Remotion Studio**: To work on the Remotion composition (`Template.tsx`) in isolation, you can use the Remotion Studio.
+    ```bash
+    pnpm remotion:studio
+    ```
 
-```
-npm run remotion:studio
-```
+## Key Components
 
-## Render videos with AWS Lambda
+### `src/VideoBook.tsx`
 
-Follow these steps to set up video rendering:
+This is the main React component for the application. It sets up the `@remotion/player` and integrates it into the application's UI. It's responsible for:
 
-1. Follow the steps in [Remotion Lambda setup guide](https://www.remotion.dev/docs/lambda/setup).
-2. Rename the `.env.example` file to `.env`.
-3. Fill in the `REMOTION_AWS_ACCESS_KEY_ID` and `REMOTION_AWS_SECRET_ACCESS_KEY` values that you got from the first step.
+-   Managing the layout and responsiveness.
+-   Passing the necessary properties (video URL, SRT URLs) to the Remotion composition.
+-   Rendering the player controls.
 
-4. Run the following to deploy your Lambda function and Remotion site:
+### `app/remotion/components/Template.tsx`
 
-```
-node deploy.mjs
-```
+This is the core Remotion composition. It defines what is actually rendered in the video player. Its responsibilities include:
 
-> Rerun this command whenever you have upgraded to a new Remotion version.
+-   Fetching and parsing SRT files for subtitles and illustration timings.
+-   Rendering the main video.
+-   Displaying and animating the subtitles based on the current time of the video. The subtitles scroll smoothly to keep the active line in view.
+-   Handling the animations for showing and hiding illustrations. When an illustration appears, the main video shrinks and moves to the corner.
 
-5. Restart the server.
+## How It Works
 
-## Commands
+The application uses two types of SRT files: one for the spoken subtitles and another to schedule the appearance of illustrations.
 
-Start the app in development mode:
-
-```
-npm run dev
-```
-
-Build the app for production:
-
-```
-npm run build
-```
-
-Start the app in production mode (after build is done):
-
-```
-npm run dev
-```
-
-Start the Remotion Studio:
-
-```
-npm run remotion:studio
-```
-
-Render the example video locally:
-
-```
-npx remotion render
-```
-
-Upgrade all Remotion packages:
-
-```
-npx remotion upgrade
-```
-
-Render the example video on AWS Lambda:
-
-```
-npm run remotion:renderlambda
-```
-
-Deploy/Update the Remotion video on S3 and the Lambda function:
-
-```
-node deploy.mjs
-```
-
-## Upgrading Remotion
-
-When upgrading Remotion to a newer version, you will need to redeploy your function and update your site using the commands above.  
-If your functions or sites are already used in production, make sure to not overwrite them - [read here](https://www.remotion.dev/docs/lambda/upgrading) for more details about upgrading.
-
-## Docs
-
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).  
-See the [React Router Docs](https://reactrouter.com/) to read about the framework.
-
-## Help
-
-Join the [Remotion Discord server](https://remotion.dev/discord) to chat with other Remotion builders.
-
-## Issues
-
-Found an issue with Remotion? [File an issue here](https://remotion.dev/issue).
-
-## License
-
-Note that for some entities a Remotion company license is needed. Read [the terms here](https://remotion.dev/license).
+1.  **Data Fetching**: The `Template` component fetches and parses both SRT files when it first renders.
+2.  **Subtitle Scrolling**:
+    -   All subtitles are rendered in a long vertical container.
+    -   `useLayoutEffect` is used to measure the position and size of each subtitle line and the height of the container.
+    -   Based on the current video time, the `currentSrtIndex` is determined.
+    -   A target `scrollY` value is calculated to center the current subtitle within the visible area.
+    -   A `spring` animation from Remotion is used to smoothly animate the `transform: translateY` property of the subtitle container, creating the scrolling effect.
+3.  **Illustration Animation**:
+    -   The `illustrationSrtUrl` defines timecodes for illustrations.
+    -   When the video playback time enters a range defined in the illustration SRT, the `currentIllustration` is set.
+    -   This triggers a `spring` animation (`animVideo`) that scales down and translates the main video to a corner.
+    -   The illustration image is displayed in the space created.
+    -   When the timecode passes, another animation grows the video back to its original size.
