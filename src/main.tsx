@@ -1,5 +1,4 @@
 import { createRoot } from "react-dom/client";
-import { Home } from "./Home";
 import { VideoBook } from "./VideoBook";
 // import { HomeBundled } from './HomeBundled';
 
