@@ -1,4 +1,3 @@
-import React from "react";
 import { VideoBook } from "../VideoBook";
 
 const MobileCheck = () => {
@@ -21,8 +20,11 @@ const MobileCheck = () => {
         fontFamily: "sans-serif",
         padding: "20px",
         color: "#333",
+        flexDirection: "column",
+        gap: "20px",
       }}
     >
+      <img src="/facepalm.gif" alt="Facepalm" style={{ maxWidth: "300px" }} />
       This website is only designed for mobile.
     </div>
   );
